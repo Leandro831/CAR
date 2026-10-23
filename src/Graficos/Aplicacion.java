@@ -210,8 +210,10 @@ public class Aplicacion extends javax.swing.JFrame
     }//GEN-LAST:event_campoIngresarContraseñaMousePressed
 
     private void botonIniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonIniciarSesionMouseClicked
-        cuadroBlancoInicioSesion.setVisible(false);
-        
+        CuadroBlancoCargando pantallaCargando = new CuadroBlancoCargando(30);
+        pantallaCargando.setBounds(cuadroBlancoInicioSesion.getBounds());
+        imagenFondoInicioSesion.remove(cuadroBlancoInicioSesion);
+        imagenFondoInicioSesion.add(pantallaCargando);
         imagenFondoInicioSesion.revalidate();
         imagenFondoInicioSesion.repaint();
     }//GEN-LAST:event_botonIniciarSesionMouseClicked

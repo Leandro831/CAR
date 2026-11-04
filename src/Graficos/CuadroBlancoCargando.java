@@ -1,7 +1,7 @@
 package Graficos;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
 public class CuadroBlancoCargando extends PanelRedondeado 
 {

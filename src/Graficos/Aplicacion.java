@@ -1,15 +1,28 @@
 package Graficos;
 
-import java.awt.*;
+import javax.swing.Timer;
+import javax.swing.BorderFactory;
+import Dominio.GestorUsuarios;
+import Dominio.Usuario;
+import java.util.logging.Logger;
 
 public class Aplicacion extends javax.swing.JFrame 
 {    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Aplicacion.class.getName());
+    private static final Logger logger = Logger.getLogger(Aplicacion.class.getName());
     
     public Aplicacion() 
     {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.campoIngresarUsuario.setBorder(BorderFactory.createCompoundBorder(
+            this.campoIngresarUsuario.getBorder(), 
+            BorderFactory.createEmptyBorder(0, 12, 0, 12)
+        ));
+        this.campoIngresarContraseña.setBorder(BorderFactory.createCompoundBorder(
+            this.campoIngresarContraseña.getBorder(), 
+            BorderFactory.createEmptyBorder(0, 12, 0, 12)
+        ));
+        this.campoIngresarContraseña.setEchoChar((char) 0);
     }
     
     @SuppressWarnings("unchecked")
@@ -24,17 +37,22 @@ public class Aplicacion extends javax.swing.JFrame
         textoIngresarContraseña = new javax.swing.JLabel();
         campoIngresarContraseña = new javax.swing.JPasswordField();
         botonIniciarSesion = new BotonRedondeado(50);
+        mensajeError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CAR");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
         setSize(new java.awt.Dimension(1280, 720));
 
         imagenFondoInicioSesion.setBackground(new java.awt.Color(102, 102, 102));
         imagenFondoInicioSesion.setForeground(new java.awt.Color(234, 234, 234));
         imagenFondoInicioSesion.setPreferredSize(new java.awt.Dimension(1280, 720));
+        imagenFondoInicioSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imagenFondoInicioSesionMouseClicked(evt);
+            }
+        });
 
         cuadroBlancoInicioSesion.setBackground(new java.awt.Color(234, 234, 234, 204));
         cuadroBlancoInicioSesion.setForeground(new java.awt.Color(0, 0, 153));
@@ -42,6 +60,7 @@ public class Aplicacion extends javax.swing.JFrame
         cuadroBlancoInicioSesion.setPreferredSize(new java.awt.Dimension(1000, 600));
 
         logoAppCarInicioSesion.setBackground(new java.awt.Color(255, 255, 255, 0));
+        logoAppCarInicioSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         logoAppCarInicioSesion.setPreferredSize(new java.awt.Dimension(768, 325));
 
         javax.swing.GroupLayout logoAppCarInicioSesionLayout = new javax.swing.GroupLayout(logoAppCarInicioSesion);
@@ -79,7 +98,7 @@ public class Aplicacion extends javax.swing.JFrame
 
         campoIngresarContraseña.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
         campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
-        campoIngresarContraseña.setText("Password");
+        campoIngresarContraseña.setText("Enter your password here");
         campoIngresarContraseña.setBorder(null);
         campoIngresarContraseña.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -89,10 +108,11 @@ public class Aplicacion extends javax.swing.JFrame
         campoIngresarContraseña.addActionListener(this::campoIngresarContraseñaActionPerformed);
 
         botonIniciarSesion.setBackground(new java.awt.Color(200, 0, 0));
-        botonIniciarSesion.setFont(new java.awt.Font("Roboto", 1, 20)); // NOI18N
+        botonIniciarSesion.setFont(new java.awt.Font("Inter", 1, 20)); // NOI18N
         botonIniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
         botonIniciarSesion.setText("Iniciar Sesión");
         botonIniciarSesion.setBorder(null);
+        botonIniciarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         botonIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 botonIniciarSesionMouseClicked(evt);
@@ -100,33 +120,42 @@ public class Aplicacion extends javax.swing.JFrame
         });
         botonIniciarSesion.addActionListener(this::botonIniciarSesionActionPerformed);
 
+        mensajeError.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
+        mensajeError.setForeground(new java.awt.Color(200, 0, 0));
+        mensajeError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout cuadroBlancoInicioSesionLayout = new javax.swing.GroupLayout(cuadroBlancoInicioSesion);
         cuadroBlancoInicioSesion.setLayout(cuadroBlancoInicioSesionLayout);
         cuadroBlancoInicioSesionLayout.setHorizontalGroup(
             cuadroBlancoInicioSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cuadroBlancoInicioSesionLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(mensajeError, javax.swing.GroupLayout.PREFERRED_SIZE, 1000, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(219, 219, 219))
             .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
                 .addGroup(cuadroBlancoInicioSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
-                        .addGap(150, 150, 150)
-                        .addComponent(logoAppCarInicioSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
                         .addGap(250, 250, 250)
                         .addGroup(cuadroBlancoInicioSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(campoIngresarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textoIngresarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textoIngresarContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(campoIngresarContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(campoIngresarContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoIngresarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
+                        .addGap(150, 150, 150)
+                        .addComponent(logoAppCarInicioSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
+                        .addGap(415, 415, 415)
+                        .addComponent(botonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cuadroBlancoInicioSesionLayout.createSequentialGroup()
-                .addGap(0, 415, Short.MAX_VALUE)
-                .addComponent(botonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(415, 415, 415))
         );
         cuadroBlancoInicioSesionLayout.setVerticalGroup(
             cuadroBlancoInicioSesionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cuadroBlancoInicioSesionLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(logoAppCarInicioSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mensajeError)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textoIngresarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -137,7 +166,7 @@ public class Aplicacion extends javax.swing.JFrame
                 .addComponent(campoIngresarContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout imagenFondoInicioSesionLayout = new javax.swing.GroupLayout(imagenFondoInicioSesion);
@@ -165,58 +194,112 @@ public class Aplicacion extends javax.swing.JFrame
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagenFondoInicioSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+            .addComponent(imagenFondoInicioSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIniciarSesionActionPerformed
-        // TODO add your handling code here:
+        this.iniciarSesión();
     }//GEN-LAST:event_botonIniciarSesionActionPerformed
 
     private void campoIngresarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIngresarUsuarioActionPerformed
-        // TODO add your handling code here:
+        this.iniciarSesión();
     }//GEN-LAST:event_campoIngresarUsuarioActionPerformed
 
     private void campoIngresarContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIngresarContraseñaActionPerformed
-        // TODO add your handling code here:
+        this.iniciarSesión();
     }//GEN-LAST:event_campoIngresarContraseñaActionPerformed
 
     private void campoIngresarUsuarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoIngresarUsuarioMousePressed
-        if(campoIngresarUsuario.getText().equals("Ej. UsernameExample67"))
+        if(this.campoIngresarUsuario.getText().equals("Ej. UsernameExample67"))
         {
-            campoIngresarUsuario.setText("");
-            campoIngresarUsuario.setForeground(new java.awt.Color(0, 0, 0));
+            this.campoIngresarUsuario.setText("");
+            this.campoIngresarUsuario.setForeground(new java.awt.Color(0, 0, 0));
         }
-        if(String.valueOf(campoIngresarContraseña.getPassword()).isEmpty())
+        if(String.valueOf(this.campoIngresarContraseña.getPassword()).isEmpty())
         {
-            campoIngresarContraseña.setText("Password");
-            campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
+            this.campoIngresarContraseña.setText("Enter your password here");
+            this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
+            this.campoIngresarContraseña.setEchoChar((char) 0);
         }
     }//GEN-LAST:event_campoIngresarUsuarioMousePressed
 
     private void campoIngresarContraseñaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoIngresarContraseñaMousePressed
-        if(campoIngresarUsuario.getText().isEmpty())
+        if(this.campoIngresarUsuario.getText().isEmpty())
         {
-            campoIngresarUsuario.setText("Ej. UsernameExample67");
-            campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
+            this.campoIngresarUsuario.setText("Ej. UsernameExample67");
+            this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
         }
-        if(String.valueOf(campoIngresarContraseña.getPassword()).equals("Password"))
+        if(String.valueOf(this.campoIngresarContraseña.getPassword()).equals("Enter your password here"))
         {
-            campoIngresarContraseña.setText("");
-            campoIngresarContraseña.setForeground(new java.awt.Color(0, 0, 0));
+            this.campoIngresarContraseña.setText("");
+            this.campoIngresarContraseña.setForeground(new java.awt.Color(0, 0, 0));
+            this.campoIngresarContraseña.setEchoChar('\u2022');
         }
     }//GEN-LAST:event_campoIngresarContraseñaMousePressed
 
+    private void iniciarSesión()
+    {
+        this.pantallaCargando.setBounds(this.cuadroBlancoInicioSesion.getBounds());
+        this.imagenFondoInicioSesion.remove(this.cuadroBlancoInicioSesion);
+        this.imagenFondoInicioSesion.add(this.pantallaCargando);
+        this.imagenFondoInicioSesion.revalidate();
+        this.imagenFondoInicioSesion.repaint();
+        Timer timer = new javax.swing.Timer(2000, (e) -> 
+        {
+            if(GestorUsuarios.validarUsuario(this.campoIngresarUsuario.getText(), String.valueOf(this.campoIngresarContraseña.getPassword())))
+            {
+                PantallaPrincipal pantallaInicio = new PantallaPrincipal();
+                pantallaInicio.setBounds(this.imagenFondoInicioSesion.getBounds());
+                this.remove(this.imagenFondoInicioSesion);
+                this.add(pantallaInicio);
+                this.revalidate();
+                this.repaint();
+            }
+            else
+            {
+                this.imagenFondoInicioSesion.remove(this.pantallaCargando);
+                if(GestorUsuarios.intentos >= 3)
+                {
+                    this.mensajeError.setText("<html><center>Ingresó el usuario o la contraseña incorrecta tres veces. Ahora<br>solo podrá ingresar mediante una cuenta de administrador"); 
+                }
+                else
+                {
+                    this.mensajeError.setText("El usuario o la contraseña es incorrecto. Intente de nuevo.");
+                }
+                this.imagenFondoInicioSesion.add(this.cuadroBlancoInicioSesion);
+                this.campoIngresarUsuario.setText("Ej. UsernameExample67");
+                this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
+                this.campoIngresarContraseña.setText("Enter your password here");
+                this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
+                this.campoIngresarContraseña.setEchoChar((char) 0);
+                this.imagenFondoInicioSesion.revalidate();
+                this.imagenFondoInicioSesion.repaint();
+            };
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+    
     private void botonIniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonIniciarSesionMouseClicked
-        CuadroBlancoCargando pantallaCargando = new CuadroBlancoCargando(30);
-        pantallaCargando.setBounds(cuadroBlancoInicioSesion.getBounds());
-        imagenFondoInicioSesion.remove(cuadroBlancoInicioSesion);
-        imagenFondoInicioSesion.add(pantallaCargando);
-        imagenFondoInicioSesion.revalidate();
-        imagenFondoInicioSesion.repaint();
+        
     }//GEN-LAST:event_botonIniciarSesionMouseClicked
+
+    private void imagenFondoInicioSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenFondoInicioSesionMouseClicked
+        if(this.campoIngresarUsuario.getText().isEmpty())
+        {
+            this.campoIngresarUsuario.setText("Ej. UsernameExample67");
+            this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
+        }
+        if(String.valueOf(this.campoIngresarContraseña.getPassword()).isEmpty())
+        {
+            this.campoIngresarContraseña.setText("Enter your password here");
+            this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
+            this.campoIngresarContraseña.setEchoChar((char) 0);
+        }
+    }//GEN-LAST:event_imagenFondoInicioSesionMouseClicked
 
     public static void main(String args[]) 
     {
@@ -241,6 +324,7 @@ public class Aplicacion extends javax.swing.JFrame
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(() -> new Aplicacion().setVisible(true));
+        GestorUsuarios.anadirUsuario(new Usuario(1, "Admin1", "@", "c", true, true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -250,7 +334,10 @@ public class Aplicacion extends javax.swing.JFrame
     private javax.swing.JPanel cuadroBlancoInicioSesion;
     private javax.swing.JPanel imagenFondoInicioSesion;
     private javax.swing.JPanel logoAppCarInicioSesion;
+    private javax.swing.JLabel mensajeError;
     private javax.swing.JLabel textoIngresarContraseña;
     private javax.swing.JLabel textoIngresarUsuario;
     // End of variables declaration//GEN-END:variables
+
+    private CuadroBlancoCargando pantallaCargando = new CuadroBlancoCargando(30);
 }

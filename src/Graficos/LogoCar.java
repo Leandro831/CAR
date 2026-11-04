@@ -1,7 +1,9 @@
 package Graficos;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.awt.Graphics;
 
 public class LogoCar extends JPanel
 {

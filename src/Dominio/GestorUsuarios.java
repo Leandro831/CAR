@@ -44,4 +44,8 @@ public class GestorUsuarios
         intentos += 1;
         return false;
     }
+
+    public static LinkedList<Usuario> getUsuarios() {
+        return usuarios;
+    }
 }

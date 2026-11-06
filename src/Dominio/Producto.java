@@ -2,23 +2,14 @@ package Dominio;
 
 public class Producto 
 {
-    private int id;
+    private long id;
     private String nombre;
     private int cantidad;
     private float precio;
     private String proveedor;
     private String categoria;
 
-    public Producto(int id, String nombre, int cantidad, float precio, String proveedor, String categoria) {
-        this.id = id;
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.proveedor = proveedor;
-        this.categoria = categoria;
-    }
-    
-    public void actualizar(int id, String nombre, int cantidad, float precio, String proveedor, String categoria)
+    public Producto(long id, String nombre, int cantidad, float precio, String proveedor, String categoria) 
     {
         this.id = id;
         this.nombre = nombre;
@@ -27,29 +18,37 @@ public class Producto
         this.proveedor = proveedor;
         this.categoria = categoria;
     }
+    
+    public void actualizar(String nombre, float precio, String proveedor, String categoria)
+    {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.proveedor = proveedor;
+        this.categoria = categoria;
+    }
 
-    public int getId() {
-        return id;
+    public long getId() {
+        return this.id;
     }
 
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     public int getCantidad() {
-        return cantidad;
+        return this.cantidad;
     }
 
     public float getPrecio() {
-        return precio;
+        return this.precio;
     }
 
     public String getProveedor() {
-        return proveedor;
+        return this.proveedor;
     }
 
     public String getCategoria() {
-        return categoria;
+        return this.categoria;
     }
     
     public void aumentarStock(int cantidad)

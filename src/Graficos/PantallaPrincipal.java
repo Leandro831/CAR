@@ -10,15 +10,23 @@ public class PantallaPrincipal extends javax.swing.JPanel
 {
     public PantallaPrincipal() 
     {
+        this.iconoMenu = new ImageIcon(getClass().getResource("/Imagenes/logoMenu.png"));
+        this.iconoPequeno = iconoMenu.getImage().getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+        this.iconoMenu = new ImageIcon(iconoPequeno);
+        this.iconoPerfil = new ImageIcon(getClass().getResource("/Imagenes/logoPerfil.png"));
+        this.iconoPequeno = iconoPerfil.getImage().getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+        this.iconoPerfil = new ImageIcon(iconoPequeno);
         initComponents();
         bienvenido2.setText(GestorUsuarios.usuarioIngresado.getNombre() + "!");
-        this.campoNombre.setBorder(BorderFactory.createCompoundBorder(
-            this.campoNombre.getBorder(), 
-            BorderFactory.createEmptyBorder(0, 12, 0, 12)
-        ));
+        this.campoNombre.setBorder(BorderFactory.createCompoundBorder(this.campoNombre.getBorder(), BorderFactory.createEmptyBorder(0, 12, 0, 12)));
         this.botonPerfil.setContentAreaFilled(false);
         this.botonPerfil.setBorderPainted(false);
         this.botonPerfil.setFocusPainted(false);
+        this.botonMenu.setContentAreaFilled(false);
+        this.botonMenu.setBorderPainted(false);
+        this.botonMenu.setFocusPainted(false);
+        this.campoPrecioMayor.setBorder(BorderFactory.createCompoundBorder(this.campoPrecioMayor.getBorder(), BorderFactory.createEmptyBorder(0, 12, 0, 12)));
+        this.campoPrecioMenor.setBorder(BorderFactory.createCompoundBorder(this.campoPrecioMenor.getBorder(), BorderFactory.createEmptyBorder(0, 12, 0, 12)));
     }
 
     /**
@@ -42,13 +50,19 @@ public class PantallaPrincipal extends javax.swing.JPanel
         sliderRangoPrecios = new javax.swing.JSlider();
         textoProductosNoEncontrados = new javax.swing.JLabel();
         logoApp = new LogoCar();
-        botonPerfil = new javax.swing.JButton(iconoPerfil2);
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        botonPerfil = new javax.swing.JButton(iconoPerfil);
+        campoPrecioMenor = new javax.swing.JTextField();
+        campoPrecioMayor = new javax.swing.JTextField();
+        botonMenu = new javax.swing.JButton(iconoMenu);
 
         setBackground(new java.awt.Color(217, 217, 217));
         setForeground(new java.awt.Color(179, 179, 179));
-        setPreferredSize(new java.awt.Dimension(1278, 720));
+        setPreferredSize(new java.awt.Dimension(1340, 720));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         bienvenido1.setFont(new java.awt.Font("Inter", 1, 80)); // NOI18N
         bienvenido1.setText("¡Bienvenido,");
@@ -63,7 +77,7 @@ public class PantallaPrincipal extends javax.swing.JPanel
         textoNombre.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
         textoNombre.setText("Nombre:");
 
-        campoNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        campoNombre.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
         campoNombre.setForeground(new java.awt.Color(200, 200, 200));
         campoNombre.setText("Ingrese el nombre");
         campoNombre.setBorder(null);
@@ -81,6 +95,11 @@ public class PantallaPrincipal extends javax.swing.JPanel
         menuCategoria.setForeground(new java.awt.Color(200, 200, 200));
         menuCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija la categoría" }));
         menuCategoria.setBorder(null);
+        menuCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuCategoriaMouseClicked(evt);
+            }
+        });
         menuCategoria.addActionListener(this::menuCategoriaActionPerformed);
 
         textoPrecio.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
@@ -107,13 +126,30 @@ public class PantallaPrincipal extends javax.swing.JPanel
             .addGap(0, 237, Short.MAX_VALUE)
         );
 
-        jFormattedTextField1.setBorder(null);
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        jFormattedTextField1.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
+        botonPerfil.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        botonPerfil.addActionListener(this::botonPerfilActionPerformed);
 
-        jFormattedTextField2.setBorder(null);
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        jFormattedTextField2.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
+        campoPrecioMenor.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
+        campoPrecioMenor.setForeground(new java.awt.Color(200, 200, 200));
+        campoPrecioMenor.setText("Precio menor");
+        campoPrecioMenor.setBorder(null);
+        campoPrecioMenor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                campoPrecioMenorMouseClicked(evt);
+            }
+        });
+
+        campoPrecioMayor.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
+        campoPrecioMayor.setForeground(new java.awt.Color(200, 200, 200));
+        campoPrecioMayor.setText("Precio mayor");
+        campoPrecioMayor.setBorder(null);
+        campoPrecioMayor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                campoPrecioMayorMouseClicked(evt);
+            }
+        });
+
+        botonMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -122,45 +158,49 @@ public class PantallaPrincipal extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
+                        .addGap(140, 140, 140)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textoFiltrarPor)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(bienvenido2)
-                                        .addComponent(bienvenido1))
-                                    .addGap(18, 18, 18)
-                                    .addComponent(logoApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addComponent(textoNombre)
-                                            .addGap(32, 32, 32)
-                                            .addComponent(campoNombre))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(textoCategoria)
-                                                .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(26, 26, 26)
-                                                    .addComponent(textoMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(textoPrecio)
-                                                    .addGap(40, 40, 40)
-                                                    .addComponent(sliderRangoPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGap(3, 3, 3))
-                                        .addComponent(textoProductosNoEncontrados, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addGap(47, 47, 47)))))
+                                    .addComponent(textoProductosNoEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 855, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(51, 51, 51)
+                                    .addComponent(botonMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(bienvenido2)
+                                            .addComponent(bienvenido1))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(logoApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(textoNombre)
+                                                .addGap(32, 32, 32)
+                                                .addComponent(campoNombre))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(textoCategoria)
+                                                    .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(campoPrecioMenor, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(textoMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(campoPrecioMayor))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(textoPrecio)
+                                                        .addGap(40, 40, 40)
+                                                        .addComponent(sliderRangoPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(3, 3, 3)))
+                                        .addGap(47, 47, 47))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addComponent(botonPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(botonPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,30 +214,35 @@ public class PantallaPrincipal extends javax.swing.JPanel
                     .addComponent(logoApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(textoFiltrarPor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(textoNombre)
-                    .addComponent(campoNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textoCategoria)
-                    .addComponent(textoPrecio)
-                    .addComponent(sliderRangoPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textoMenos)
-                    .addComponent(jFormattedTextField1)
-                    .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                        .addComponent(botonPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(textoNombre)
+                            .addComponent(campoNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textoCategoria)
+                            .addComponent(textoPrecio)
+                            .addComponent(sliderRangoPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 66, Short.MAX_VALUE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(campoPrecioMayor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(textoMenos)
+                                .addComponent(campoPrecioMenor, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botonMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botonPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(60, 60, 60))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(textoProductosNoEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(114, 114, 114))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -206,7 +251,9 @@ public class PantallaPrincipal extends javax.swing.JPanel
     }//GEN-LAST:event_campoNombreActionPerformed
 
     private void menuCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCategoriaActionPerformed
-        // TODO add your handling code here:
+        this.accionCampoNombre();
+        this.accionCampoPrecioMayor();
+        this.accionCampoPrecioMenor();
     }//GEN-LAST:event_menuCategoriaActionPerformed
 
     private void campoNombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoNombreMouseClicked
@@ -215,16 +262,81 @@ public class PantallaPrincipal extends javax.swing.JPanel
             this.campoNombre.setText("");
             this.campoNombre.setForeground(new Color(0, 0, 0));
         }
+        this.accionCampoPrecioMayor();
+        this.accionCampoPrecioMenor();
     }//GEN-LAST:event_campoNombreMouseClicked
 
+    private void botonPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonPerfilActionPerformed
+
+    private void campoPrecioMenorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoPrecioMenorMouseClicked
+        if(this.campoPrecioMenor.getText().equals("Precio menor"))
+        {
+            this.campoPrecioMenor.setText("");
+            this.campoPrecioMenor.setForeground(new Color(0, 0, 0));
+        }
+        this.accionCampoNombre();
+        this.accionCampoPrecioMayor();
+    }//GEN-LAST:event_campoPrecioMenorMouseClicked
+
+    private void campoPrecioMayorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoPrecioMayorMouseClicked
+        if(this.campoPrecioMayor.getText().equals("Precio mayor"))
+        {
+            this.campoPrecioMayor.setText("");
+            this.campoPrecioMayor.setForeground(new Color(0, 0, 0));
+        }
+        this.accionCampoNombre();
+        this.accionCampoPrecioMenor();
+    }//GEN-LAST:event_campoPrecioMayorMouseClicked
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        this.accionCampoNombre();
+        this.accionCampoPrecioMayor();
+        this.accionCampoPrecioMenor();
+    }//GEN-LAST:event_formMouseClicked
+
+    private void menuCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuCategoriaMouseClicked
+        this.accionCampoNombre();
+        this.accionCampoPrecioMayor();
+        this.accionCampoPrecioMenor();
+    }//GEN-LAST:event_menuCategoriaMouseClicked
+    
+    private void accionCampoNombre()
+    {
+        if(this.campoNombre.getText().isEmpty())
+        {
+            this.campoNombre.setText("Ingrese el nombre");
+            this.campoNombre.setForeground(new Color(200, 200, 200));
+        }
+    }
+    
+    private void accionCampoPrecioMayor()
+    {
+        if(this.campoPrecioMayor.getText().isEmpty())
+        {
+            this.campoPrecioMayor.setText("Precio mayor");
+            this.campoPrecioMayor.setForeground(new Color(200, 200, 200));
+        }
+    }
+    
+    private void accionCampoPrecioMenor()
+    {
+        if(this.campoPrecioMenor.getText().isEmpty())
+        {
+            this.campoPrecioMenor.setText("Precio menor");
+            this.campoPrecioMenor.setForeground(new Color(200, 200, 200));
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bienvenido1;
     private javax.swing.JLabel bienvenido2;
+    private javax.swing.JButton botonMenu;
     private javax.swing.JButton botonPerfil;
     private javax.swing.JTextField campoNombre;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
+    private javax.swing.JTextField campoPrecioMayor;
+    private javax.swing.JTextField campoPrecioMenor;
     private javax.swing.JPanel logoApp;
     private javax.swing.JComboBox<String> menuCategoria;
     private javax.swing.JSlider sliderRangoPrecios;
@@ -235,7 +347,7 @@ public class PantallaPrincipal extends javax.swing.JPanel
     private javax.swing.JLabel textoPrecio;
     private javax.swing.JLabel textoProductosNoEncontrados;
     // End of variables declaration//GEN-END:variables
-    private ImageIcon iconoPerfil = new ImageIcon(getClass().getResource("/Imagenes/logoPerfil.png"));
-    private Image iconoPequeno = iconoPerfil.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
-    private ImageIcon iconoPerfil2 = new ImageIcon(iconoPequeno);
+    private ImageIcon iconoPerfil;
+    private Image iconoPequeno;
+    private ImageIcon iconoMenu;
 }

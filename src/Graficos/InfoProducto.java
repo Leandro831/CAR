@@ -1,5 +1,7 @@
 package Graficos;
 
+import Dominio.Producto;
+
 public class InfoProducto extends javax.swing.JPanel 
 {
     public InfoProducto() 
@@ -26,6 +28,7 @@ public class InfoProducto extends javax.swing.JPanel
         textoValorProveedor = new javax.swing.JLabel();
         textoValorCategoria = new javax.swing.JLabel();
         xCerrar = new javax.swing.JLabel();
+        textoID = new javax.swing.JLabel();
 
         textoNombre.setFont(new java.awt.Font("Inter", 1, 40)); // NOI18N
         textoNombre.setText("Nombre Producto");
@@ -56,14 +59,23 @@ public class InfoProducto extends javax.swing.JPanel
 
         xCerrar.setFont(new java.awt.Font("Inter", 0, 30)); // NOI18N
         xCerrar.setText("X");
+        xCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        textoID.setFont(new java.awt.Font("Inter", 0, 18)); // NOI18N
+        textoID.setText("ID");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(xCerrar)
+                .addGap(25, 25, 25))
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoID)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(textoPrecio)
                         .addGap(18, 18, 18)
@@ -81,11 +93,7 @@ public class InfoProducto extends javax.swing.JPanel
                         .addGap(18, 18, 18)
                         .addComponent(textoCantidadUnidades))
                     .addComponent(textoNombre))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(xCerrar)
-                .addGap(25, 25, 25))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,7 +102,9 @@ public class InfoProducto extends javax.swing.JPanel
                 .addComponent(xCerrar)
                 .addGap(12, 12, 12)
                 .addComponent(textoNombre)
-                .addGap(131, 131, 131)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoID)
+                .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoPrecio)
                     .addComponent(textoValorPrecio))
@@ -110,14 +120,24 @@ public class InfoProducto extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoStock)
                     .addComponent(textoCantidadUnidades))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    public void establecerProducto(Producto producto)
+    {
+        this.textoNombre.setText(producto.getNombre());
+        this.textoCantidadUnidades.setText(String.valueOf(producto.getCantidad()));
+        this.textoValorCategoria.setText(producto.getCategoria());
+        this.textoID.setText(String.valueOf((char) producto.getId()));
+        this.textoValorPrecio.setText(String.valueOf(producto.getPrecio()));
+        this.textoValorProveedor.setText(producto.getProveedor());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel textoCantidadUnidades;
     private javax.swing.JLabel textoCategoria;
+    private javax.swing.JLabel textoID;
     private javax.swing.JLabel textoNombre;
     private javax.swing.JLabel textoPrecio;
     private javax.swing.JLabel textoProveedor;

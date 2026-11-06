@@ -3,8 +3,8 @@ package Graficos;
 import javax.swing.Timer;
 import javax.swing.BorderFactory;
 import Dominio.GestorUsuarios;
-import Dominio.Usuario;
 import java.util.logging.Logger;
+import Persistencia.ArchivoBD;
 
 public class Aplicacion extends javax.swing.JFrame 
 {    
@@ -324,7 +324,7 @@ public class Aplicacion extends javax.swing.JFrame
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(() -> new Aplicacion().setVisible(true));
-        GestorUsuarios.anadirUsuario(new Usuario(1, "Admin1", "@", "c", true, true));
+        ArchivoBD.cargarDatos();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

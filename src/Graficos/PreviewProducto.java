@@ -26,6 +26,7 @@ public class PreviewProducto extends PanelRedondeado {
         flecha = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         textoNombre.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
         textoNombre.setText("Nombre Producto");

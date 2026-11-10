@@ -1,3 +1,4 @@
+7887;Producto58;20;788.0;Proveedor;Category
 12582;Producto9;0;6700.0;Proveedor3;categoria3
 20260001;Producto1;20;30000.0;Proveedor1;Categoria1
 20260002;Producto2;1;1500.0;Proveedor1;categoria 2

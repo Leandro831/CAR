@@ -844,7 +844,6 @@ public class PantallaPrincipal extends javax.swing.JPanel
         if(this.ventanaMensajeRegistro.botonPrincipal.getText().equals("Registrar otro producto"))
         {
             this.ventanaMensajeRegistro.setVisible(false);
-            this.ventanaRegistro.limpiar();
             this.ventanaRegistro.validarCampos();
             this.ventanaRegistro.cargarCategorias();
             this.panelOscuro.mostrarCentrado(this.ventanaRegistro);
@@ -861,6 +860,7 @@ public class PantallaPrincipal extends javax.swing.JPanel
                 this.ventanaEntrada.setProducto(GestorInventario.buscarID(this.ventanaRegistro.id));
             this.panelOscuro.mostrarCentrado(this.ventanaEntrada);
         }
+        this.ventanaRegistro.limpiar();
     }
     
     private void botonCerrarActualizarActionPerformed(java.awt.event.ActionEvent evt) {

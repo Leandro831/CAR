@@ -10,59 +10,33 @@ import java.io.FileWriter;
 
 public class EscrituraDatos 
 {
-    protected static void escribirProductos()
+    public static void escribirProductos()
     {
-        BufferedWriter escritura = null;
-        try
+        try(BufferedWriter escritura = new BufferedWriter(new FileWriter(new File("ArchivosPersistencia/inventario.txt"))))
         {
-            escritura = new BufferedWriter(new FileWriter(new File("ArchivosPersistencia/inventario.txt")));
             for(Producto producto: GestorInventario.getProductos())
             {
-                escritura.write(producto.toString());
+                escritura.write(producto.toString() + "\n");
             }
         }
         catch(Exception error)
         {
             System.out.println("Error: " + error.getMessage());
-        }
-        finally
-        {
-            try
-            {
-                escritura.close();
-            }
-            catch(Exception error)
-            {
-                System.out.println("Error: " + error.getMessage());
-            }
         }
     }
     
-    protected static void escribirUsuarios()
+    public static void escribirUsuarios()
     {
-        BufferedWriter escritura = null;
-        try
+        try(BufferedWriter escritura = new BufferedWriter(new FileWriter(new File("ArchivosPersistencia/usuarios.txt"))))
         {
-            escritura = new BufferedWriter(new FileWriter(new File("ArchivosPersistencia/usuarios.txt")));
             for(Usuario usuario: GestorUsuarios.getUsuarios())
             {
-                escritura.write(usuario.toString());
+                escritura.write(usuario.toString() + "\n");
             }
         }
         catch(Exception error)
         {
             System.out.println("Error: " + error.getMessage());
-        }
-        finally
-        {
-            try
-            {
-                escritura.close();
-            }
-            catch(Exception error)
-            {
-                System.out.println("Error: " + error.getMessage());
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package Graficos;
 
+import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -23,7 +24,11 @@ public class BotonRedondeado extends JButton
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (this.getModel().isPressed()) 
+        if (!this.isEnabled())
+        {
+            g2.setColor(new Color(29, 27, 32, 26)); 
+        }
+        else if (this.getModel().isPressed()) 
         {
             g2.setColor(this.getBackground().darker());
         } 

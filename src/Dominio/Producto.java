@@ -68,4 +68,10 @@ public class Producto
             return true;
         }
     }
+    
+    @Override
+    public String toString()
+    {
+        return this.id + ";" + this.nombre + ";" + this.cantidad + ";" + this.precio + ";" + this.proveedor + ";"+ this.categoria;
+    }
 }

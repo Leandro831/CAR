@@ -11,7 +11,7 @@ public class CuadroBlancoCargando extends PanelRedondeado
         initComponents();
         ImageIcon ruedaCargando = new ImageIcon(getClass().getResource("/Imagenes/loadingCircle.gif"));
         ImageIcon ruedaEscalada = new ImageIcon(ruedaCargando.getImage().getScaledInstance(83, 83, Image.SCALE_DEFAULT));
-        ruedaGiratoriaCargando.setIcon(ruedaEscalada);
+        this.ruedaGiratoriaCargando.setIcon(ruedaEscalada);
         this.setOpaque(false);
         this.setBackground(new java.awt.Color(234, 234, 234, 204));
     }

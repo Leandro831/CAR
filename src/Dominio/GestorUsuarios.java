@@ -1,5 +1,6 @@
 package Dominio;
 
+import Persistencia.EscrituraDatos;
 import java.util.LinkedList;
 
 public class GestorUsuarios 
@@ -8,14 +9,29 @@ public class GestorUsuarios
     public static int intentos = 0;
     public static Usuario usuarioIngresado = null;
     
-    public static void anadirUsuario(Usuario usuario)
+    public static boolean anadirUsuario(Usuario usuario)
     {
-        usuarios.add(usuario);
+        boolean nuevo = true;
+        for(Usuario user : usuarios)
+        {
+            if(user.getNombre().equals(usuario.getNombre()) || user.getId() == usuario.getId() || user.getNombreUsuario().equals(usuario.getNombreUsuario()))
+            {
+                nuevo = false;
+                break;
+            }
+        }
+        if(nuevo)
+        {
+            usuarios.add(usuario);
+            EscrituraDatos.escribirUsuarios();
+        }
+        return nuevo;
     }
     
     public static void eliminarUsuario(Usuario usuario)
     {
         usuarios.remove(usuario);
+        EscrituraDatos.escribirUsuarios();
     }
     
     public static boolean validarUsuario(String nombreUsuario, String contraseña)

@@ -49,14 +49,9 @@ public class Usuario
         return this.admin;
     }
     
-    public void actualizarUsuario(long id, String nombre, String nombreUsuario, String contraseña, boolean activo, boolean admin) 
+    public void setActivo(boolean activo)
     {
-        this.id = id;
-        this.nombre = nombre;
-        this.nombreUsuario = nombreUsuario;
-        this.contraseña = contraseña;
         this.activo = activo;
-        this.admin = admin;
     }
     
     @Override

@@ -1,28 +1,30 @@
 package Graficos;
 
 import javax.swing.Timer;
-import javax.swing.BorderFactory;
 import Dominio.GestorUsuarios;
 import java.util.logging.Logger;
-import Persistencia.ArchivoBD;
+import Persistencia.LecturaDatos;
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+import javax.swing.UIManager;
 
 public class Aplicacion extends javax.swing.JFrame 
 {    
     private static final Logger logger = Logger.getLogger(Aplicacion.class.getName());
     
-    public Aplicacion() 
+    public Aplicacion()
     {
+        this.pantallaInicio = new PantallaPrincipal();
+        this.pantallaCargando = new CuadroBlancoCargando(30);
         initComponents();
         this.setLocationRelativeTo(null);
-        this.campoIngresarUsuario.setBorder(BorderFactory.createCompoundBorder(
-            this.campoIngresarUsuario.getBorder(), 
-            BorderFactory.createEmptyBorder(0, 12, 0, 12)
-        ));
-        this.campoIngresarContraseña.setBorder(BorderFactory.createCompoundBorder(
-            this.campoIngresarContraseña.getBorder(), 
-            BorderFactory.createEmptyBorder(0, 12, 0, 12)
-        ));
         this.campoIngresarContraseña.setEchoChar((char) 0);
+        this.pantallaInicio.menuPerfiles.botonCerrarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                cerrarSesionMousePressed(evt);
+            }
+        });
     }
     
     @SuppressWarnings("unchecked")
@@ -48,11 +50,6 @@ public class Aplicacion extends javax.swing.JFrame
         imagenFondoInicioSesion.setBackground(new java.awt.Color(102, 102, 102));
         imagenFondoInicioSesion.setForeground(new java.awt.Color(234, 234, 234));
         imagenFondoInicioSesion.setPreferredSize(new java.awt.Dimension(1280, 720));
-        imagenFondoInicioSesion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                imagenFondoInicioSesionMouseClicked(evt);
-            }
-        });
 
         cuadroBlancoInicioSesion.setBackground(new java.awt.Color(234, 234, 234, 204));
         cuadroBlancoInicioSesion.setForeground(new java.awt.Color(0, 0, 153));
@@ -83,12 +80,15 @@ public class Aplicacion extends javax.swing.JFrame
         campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
         campoIngresarUsuario.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         campoIngresarUsuario.setText("Ej. UsernameExample67");
-        campoIngresarUsuario.setBorder(null);
+        campoIngresarUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
         campoIngresarUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         campoIngresarUsuario.setSelectionColor(new java.awt.Color(0, 102, 255));
-        campoIngresarUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                campoIngresarUsuarioMousePressed(evt);
+        campoIngresarUsuario.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoIngresarUsuarioFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoIngresarUsuarioFocusLost(evt);
             }
         });
         campoIngresarUsuario.addActionListener(this::campoIngresarUsuarioActionPerformed);
@@ -99,10 +99,13 @@ public class Aplicacion extends javax.swing.JFrame
         campoIngresarContraseña.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
         campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
         campoIngresarContraseña.setText("Enter your password here");
-        campoIngresarContraseña.setBorder(null);
-        campoIngresarContraseña.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                campoIngresarContraseñaMousePressed(evt);
+        campoIngresarContraseña.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
+        campoIngresarContraseña.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoIngresarContraseñaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoIngresarContraseñaFocusLost(evt);
             }
         });
         campoIngresarContraseña.addActionListener(this::campoIngresarContraseñaActionPerformed);
@@ -113,11 +116,6 @@ public class Aplicacion extends javax.swing.JFrame
         botonIniciarSesion.setText("Iniciar Sesión");
         botonIniciarSesion.setBorder(null);
         botonIniciarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        botonIniciarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botonIniciarSesionMouseClicked(evt);
-            }
-        });
         botonIniciarSesion.addActionListener(this::botonIniciarSesionActionPerformed);
 
         mensajeError.setFont(new java.awt.Font("Inter", 0, 20)); // NOI18N
@@ -212,34 +210,6 @@ public class Aplicacion extends javax.swing.JFrame
         this.iniciarSesión();
     }//GEN-LAST:event_campoIngresarContraseñaActionPerformed
 
-    private void campoIngresarUsuarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoIngresarUsuarioMousePressed
-        if(this.campoIngresarUsuario.getText().equals("Ej. UsernameExample67"))
-        {
-            this.campoIngresarUsuario.setText("");
-            this.campoIngresarUsuario.setForeground(new java.awt.Color(0, 0, 0));
-        }
-        if(String.valueOf(this.campoIngresarContraseña.getPassword()).isEmpty())
-        {
-            this.campoIngresarContraseña.setText("Enter your password here");
-            this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
-            this.campoIngresarContraseña.setEchoChar((char) 0);
-        }
-    }//GEN-LAST:event_campoIngresarUsuarioMousePressed
-
-    private void campoIngresarContraseñaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoIngresarContraseñaMousePressed
-        if(this.campoIngresarUsuario.getText().isEmpty())
-        {
-            this.campoIngresarUsuario.setText("Ej. UsernameExample67");
-            this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
-        }
-        if(String.valueOf(this.campoIngresarContraseña.getPassword()).equals("Enter your password here"))
-        {
-            this.campoIngresarContraseña.setText("");
-            this.campoIngresarContraseña.setForeground(new java.awt.Color(0, 0, 0));
-            this.campoIngresarContraseña.setEchoChar('\u2022');
-        }
-    }//GEN-LAST:event_campoIngresarContraseñaMousePressed
-
     private void iniciarSesión()
     {
         this.pantallaCargando.setBounds(this.cuadroBlancoInicioSesion.getBounds());
@@ -251,9 +221,9 @@ public class Aplicacion extends javax.swing.JFrame
         {
             if(GestorUsuarios.validarUsuario(this.campoIngresarUsuario.getText(), String.valueOf(this.campoIngresarContraseña.getPassword())))
             {
-                PantallaPrincipal pantallaInicio = new PantallaPrincipal();
                 pantallaInicio.setBounds(this.imagenFondoInicioSesion.getBounds());
                 this.remove(this.imagenFondoInicioSesion);
+                this.pantallaInicio.setUsuario(GestorUsuarios.usuarioIngresado);
                 this.add(pantallaInicio);
                 this.revalidate();
                 this.repaint();
@@ -277,29 +247,64 @@ public class Aplicacion extends javax.swing.JFrame
                 this.campoIngresarContraseña.setEchoChar((char) 0);
                 this.imagenFondoInicioSesion.revalidate();
                 this.imagenFondoInicioSesion.repaint();
-            };
+            }
         });
         timer.setRepeats(false);
         timer.start();
     }
     
-    private void botonIniciarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonIniciarSesionMouseClicked
-        
-    }//GEN-LAST:event_botonIniciarSesionMouseClicked
+    private void cerrarSesionMousePressed(MouseEvent evt){
+        this.pantallaInicio.panelOscuro.removeAll();
+        this.pantallaInicio.panelOscuro.setVisible(false);
+        this.remove(pantallaInicio);
+        this.imagenFondoInicioSesion.remove(this.pantallaCargando);
+        this.imagenFondoInicioSesion.add(this.cuadroBlancoInicioSesion);
+        this.mensajeError.setText("");
+        GestorUsuarios.intentos = 0;
+        GestorUsuarios.usuarioIngresado = null;
+        this.add(this.imagenFondoInicioSesion);
+        this.campoIngresarUsuario.setText("Ej. UsernameExample67");
+        this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
+        this.campoIngresarContraseña.setText("Enter your password here");
+        this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
+        this.campoIngresarContraseña.setEchoChar((char) 0);
+        this.imagenFondoInicioSesion.revalidate();
+        this.imagenFondoInicioSesion.repaint();
+    }
+    
+    private void campoIngresarUsuarioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoIngresarUsuarioFocusGained
+        if(this.campoIngresarUsuario.getText().equals("Ej. UsernameExample67"))
+        {
+            this.campoIngresarUsuario.setText("");
+            this.campoIngresarUsuario.setForeground(new java.awt.Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_campoIngresarUsuarioFocusGained
 
-    private void imagenFondoInicioSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imagenFondoInicioSesionMouseClicked
+    private void campoIngresarUsuarioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoIngresarUsuarioFocusLost
         if(this.campoIngresarUsuario.getText().isEmpty())
         {
             this.campoIngresarUsuario.setText("Ej. UsernameExample67");
             this.campoIngresarUsuario.setForeground(new java.awt.Color(200, 200, 200));
         }
+    }//GEN-LAST:event_campoIngresarUsuarioFocusLost
+
+    private void campoIngresarContraseñaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoIngresarContraseñaFocusGained
+        if(String.valueOf(this.campoIngresarContraseña.getPassword()).equals("Enter your password here"))
+        {
+            this.campoIngresarContraseña.setText("");
+            this.campoIngresarContraseña.setForeground(new java.awt.Color(0, 0, 0));
+            this.campoIngresarContraseña.setEchoChar('\u2022');
+        }
+    }//GEN-LAST:event_campoIngresarContraseñaFocusGained
+
+    private void campoIngresarContraseñaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoIngresarContraseñaFocusLost
         if(String.valueOf(this.campoIngresarContraseña.getPassword()).isEmpty())
         {
             this.campoIngresarContraseña.setText("Enter your password here");
             this.campoIngresarContraseña.setForeground(new java.awt.Color(200, 200, 200));
             this.campoIngresarContraseña.setEchoChar((char) 0);
         }
-    }//GEN-LAST:event_imagenFondoInicioSesionMouseClicked
+    }//GEN-LAST:event_campoIngresarContraseñaFocusLost
 
     public static void main(String args[]) 
     {
@@ -307,6 +312,7 @@ public class Aplicacion extends javax.swing.JFrame
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        UIManager.put("nimbusSelection", new Color(200, 0, 0, 191));
         try 
         {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) 
@@ -323,8 +329,9 @@ public class Aplicacion extends javax.swing.JFrame
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        LecturaDatos.leerProductos();
+        LecturaDatos.leerUsuarios();
         java.awt.EventQueue.invokeLater(() -> new Aplicacion().setVisible(true));
-        ArchivoBD.cargarDatos();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -338,6 +345,6 @@ public class Aplicacion extends javax.swing.JFrame
     private javax.swing.JLabel textoIngresarContraseña;
     private javax.swing.JLabel textoIngresarUsuario;
     // End of variables declaration//GEN-END:variables
-
-    private CuadroBlancoCargando pantallaCargando = new CuadroBlancoCargando(30);
+    private CuadroBlancoCargando pantallaCargando;
+    PantallaPrincipal pantallaInicio;
 }

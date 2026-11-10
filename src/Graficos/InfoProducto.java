@@ -2,11 +2,13 @@ package Graficos;
 
 import Dominio.Producto;
 
-public class InfoProducto extends javax.swing.JPanel 
+public class InfoProducto extends PanelRedondeado 
 {
-    public InfoProducto() 
+    public InfoProducto(int radio) 
     {
+        super(radio);
         initComponents();
+        this.setOpaque(false);
     }
 
     /**
@@ -29,6 +31,13 @@ public class InfoProducto extends javax.swing.JPanel
         textoValorCategoria = new javax.swing.JLabel();
         xCerrar = new javax.swing.JLabel();
         textoID = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(236, 230, 240));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
 
         textoNombre.setFont(new java.awt.Font("Inter", 1, 40)); // NOI18N
         textoNombre.setText("Nombre Producto");
@@ -124,12 +133,16 @@ public class InfoProducto extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formMousePressed
+
     public void establecerProducto(Producto producto)
     {
         this.textoNombre.setText(producto.getNombre());
         this.textoCantidadUnidades.setText(String.valueOf(producto.getCantidad()));
         this.textoValorCategoria.setText(producto.getCategoria());
-        this.textoID.setText(String.valueOf((char) producto.getId()));
+        this.textoID.setText(String.valueOf(producto.getId()));
         this.textoValorPrecio.setText(String.valueOf(producto.getPrecio()));
         this.textoValorProveedor.setText(producto.getProveedor());
     }

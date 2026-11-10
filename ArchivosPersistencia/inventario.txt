@@ -1,1 +1,7 @@
-
+12582;Producto9;0;6700.0;Proveedor3;categoria3
+20260001;Producto1;20;30000.0;Proveedor1;Categoria1
+20260002;Producto2;1;1500.0;Proveedor1;categoria 2
+2026767;Producto64;67;33367.0;Proveedor00;Categoria4
+2020202;Producto6;56;20000.0;Proveedor1;Categoria4
+12121;Producto;3;20000.0;N/A;categoria 2
+121212;Producto8;20;2000.0;Proveedor2;Categoria1

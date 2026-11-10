@@ -1,14 +1,23 @@
 package Graficos;
 
-public class PreviewProducto extends PanelRedondeado {
+import Dominio.Producto;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
-    /**
-     * Creates new form PreviewProducto
-     */
-    public PreviewProducto(int radio) 
+public class PreviewProducto extends PanelRedondeado 
+{
+    public PreviewProducto(int radio, Producto producto) 
     {
         super(radio);
         initComponents();
+        this.textoNombre.setText(producto.getNombre());
+        this.textoPrecio.setText(String.valueOf(producto.getPrecio()));
+        this.textoStock.setText("Stock disponible: " + producto.getCantidad());
+        this.producto = producto;
+        this.chevron = new ImageIcon(getClass().getResource("/Imagenes/chevronDerecho.png"));
+        this.iconoPequeno = this.chevron.getImage().getScaledInstance(19, 19, Image.SCALE_SMOOTH);
+        this.chevron = new ImageIcon(this.iconoPequeno);
+        this.flecha.setIcon(chevron);
     }
 
     /**
@@ -55,7 +64,7 @@ public class PreviewProducto extends PanelRedondeado {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(textoStock)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(flecha)
+                        .addComponent(flecha, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19))))
         );
         layout.setVerticalGroup(
@@ -71,12 +80,28 @@ public class PreviewProducto extends PanelRedondeado {
                         .addComponent(textoStock)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                        .addComponent(flecha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(flecha, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+
+    public void agregarClick(java.awt.event.MouseListener listener) 
+    {
+        this.addMouseListener(listener);
+        agregarARecursivo(this, listener);
+    }
+
+    private void agregarARecursivo(java.awt.Container padre, java.awt.event.MouseListener listener) 
+    {
+        for (java.awt.Component componente : padre.getComponents()) {
+            componente.addMouseListener(listener);
+            if (componente instanceof java.awt.Container) {
+                agregarARecursivo((java.awt.Container) componente, listener);
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JLabel flecha;
@@ -84,4 +109,7 @@ public class PreviewProducto extends PanelRedondeado {
     private javax.swing.JLabel textoPrecio;
     private javax.swing.JLabel textoStock;
     // End of variables declaration//GEN-END:variables
+    public Producto producto;
+    private Image iconoPequeno;
+    private ImageIcon chevron;
 }

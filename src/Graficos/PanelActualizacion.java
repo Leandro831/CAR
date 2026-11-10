@@ -1,11 +1,55 @@
 package Graficos;
 
 import Dominio.GestorInventario;
+import Dominio.Producto;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
-public class PanelActualizacion extends javax.swing.JPanel 
+public class PanelActualizacion extends PanelRedondeado 
 {
-    public PanelActualizacion() {
+    public PanelActualizacion(int radio) 
+    {
+        super(radio);
         initComponents();
+        this.setOpaque(false);
+        this.mensajeError.setVisible(false);
+        this.menuCategoria.setUI(new UIModernaMenu());
+        this.menuCategoria.setOpaque(false);
+        this.menuCategoria.setBackground(new Color(255, 255, 255));
+        this.menuCategoria.setLightWeightPopupEnabled(false);
+        this.menuCategoria.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
+                label.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+                label.setOpaque(true);
+                label.setBackground(isSelected ? new Color(200, 0, 0, 191) : new Color(255, 255, 255));
+                label.setForeground(isSelected ? new Color(255, 255, 255) : "Escoja la categoria".equals(value) ? new Color(200, 200, 200) : new Color(0, 0, 0));
+                return label;
+            }
+        });
+        this.menuProductos.setUI(new UIModernaMenu());
+        this.menuProductos.setOpaque(false);
+        this.menuProductos.setBackground(new Color(255, 255, 255));
+        this.menuProductos.setLightWeightPopupEnabled(false);
+        this.menuProductos.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
+                label.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+                label.setOpaque(true);
+                label.setBackground(isSelected ? new Color(200, 0, 0, 191) : new Color(255, 255, 255));
+                label.setForeground(isSelected ? new Color(255, 255, 255) : "Elija el producto".equals(value) ? new Color(200, 200, 200) : new Color(0, 0, 0));
+                return label;
+            }
+        });
     }
 
     /**
@@ -21,7 +65,6 @@ public class PanelActualizacion extends javax.swing.JPanel
         textoDescripcion = new javax.swing.JLabel();
         textoProducto = new javax.swing.JLabel();
         menuProductos = new javax.swing.JComboBox<>();
-        mensajeError1 = new javax.swing.JLabel();
         textoNombre = new javax.swing.JLabel();
         campoNombre = new javax.swing.JTextField();
         textoProveedor = new javax.swing.JLabel();
@@ -30,13 +73,20 @@ public class PanelActualizacion extends javax.swing.JPanel
         texto$ = new javax.swing.JLabel();
         campoPrecio = new javax.swing.JTextField();
         textoCategoria = new javax.swing.JLabel();
-        menuCategorias = new javax.swing.JComboBox<>();
+        menuCategoria = new javax.swing.JComboBox<>();
         mensajeCamposObligatorios = new javax.swing.JLabel();
-        botonActualizar = new BotonRedondeado(30);
+        botonEliminar = new BotonRedondeado(40);
         botonCerrar = new BotonRedondeado(30);
-        botonEliminar = new BotonRedondeado(30);
+        botonActualizar = new BotonRedondeado(40);
+        mensajeError = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(236, 230, 240));
+        setPreferredSize(new java.awt.Dimension(728, 430));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
 
         textoActualizar.setFont(new java.awt.Font("Inter", 0, 26)); // NOI18N
         textoActualizar.setText("Actualizar Producto");
@@ -48,26 +98,50 @@ public class PanelActualizacion extends javax.swing.JPanel
         textoProducto.setText("Producto:");
 
         menuProductos.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        menuProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija el producto", " " }));
-
-        mensajeError1.setFont(new java.awt.Font("Inter", 0, 10)); // NOI18N
-        mensajeError1.setForeground(new java.awt.Color(255, 0, 0));
-        mensajeError1.setText("El producto no existe o fue eliminado");
+        menuProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija el producto" }));
+        menuProductos.addActionListener(this::menuProductosActionPerformed);
 
         textoNombre.setFont(new java.awt.Font("Inter", 0, 16)); // NOI18N
         textoNombre.setText("Nombre:");
 
         campoNombre.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        campoNombre.setForeground(new java.awt.Color(200, 200, 200));
+        campoNombre.setForeground(new java.awt.Color(0, 0, 0));
         campoNombre.setText("Ingrese el nombre");
-        campoNombre.addActionListener(this::campoNombreActionPerformed);
+        campoNombre.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
+        campoNombre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoNombreFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoNombreFocusLost(evt);
+            }
+        });
+        campoNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoNombreKeyReleased(evt);
+            }
+        });
 
         textoProveedor.setFont(new java.awt.Font("Inter", 0, 16)); // NOI18N
         textoProveedor.setText("Proveedor:");
 
         campoProveedor.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        campoProveedor.setForeground(new java.awt.Color(200, 200, 200));
+        campoProveedor.setForeground(new java.awt.Color(0, 0, 0));
         campoProveedor.setText("Elija el proveedor");
+        campoProveedor.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
+        campoProveedor.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoProveedorFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoProveedorFocusLost(evt);
+            }
+        });
+        campoProveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoProveedorKeyReleased(evt);
+            }
+        });
 
         textoPrecio.setFont(new java.awt.Font("Inter", 0, 16)); // NOI18N
         textoPrecio.setText("Precio:");
@@ -76,35 +150,55 @@ public class PanelActualizacion extends javax.swing.JPanel
         texto$.setText("$");
 
         campoPrecio.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        campoPrecio.setForeground(new java.awt.Color(200, 200, 200));
+        campoPrecio.setForeground(new java.awt.Color(0, 0, 0));
         campoPrecio.setText("Ingrese el precio");
+        campoPrecio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 12));
+        campoPrecio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoPrecioFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                campoPrecioFocusLost(evt);
+            }
+        });
+        campoPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoPrecioKeyReleased(evt);
+            }
+        });
 
         textoCategoria.setFont(new java.awt.Font("Inter", 0, 16)); // NOI18N
         textoCategoria.setText("Categoría:");
 
-        menuCategorias.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
-        menuCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Escoja la categoría", "Nuevo" }));
+        menuCategoria.setFont(new java.awt.Font("Inter", 0, 14)); // NOI18N
+        menuCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Escoja la categoría", "Nuevo" }));
+        menuCategoria.addActionListener(this::menuCategoriaActionPerformed);
 
         mensajeCamposObligatorios.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
         mensajeCamposObligatorios.setForeground(new java.awt.Color(255, 0, 0));
         mensajeCamposObligatorios.setText("Todos los campos son obligatorios");
 
-        botonActualizar.setBackground(new java.awt.Color(200, 0, 0));
-        botonActualizar.setFont(new java.awt.Font("Inter", 1, 16)); // NOI18N
-        botonActualizar.setForeground(new java.awt.Color(236, 230, 240));
-        botonActualizar.setText("Eliminar");
+        botonEliminar.setBackground(new java.awt.Color(200, 0, 0));
+        botonEliminar.setFont(new java.awt.Font("Inter", 1, 16)); // NOI18N
+        botonEliminar.setForeground(new java.awt.Color(236, 230, 240));
+        botonEliminar.setText("Eliminar");
+        botonEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         botonCerrar.setBackground(new Color(0, 0 ,0 ,0));
         botonCerrar.setFont(new java.awt.Font("Inter", 1, 16)); // NOI18N
         botonCerrar.setForeground(new java.awt.Color(164, 80, 80));
         botonCerrar.setText("Cerrar");
-        botonCerrar.addActionListener(this::botonCerrarActionPerformed);
+        botonCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        botonEliminar.setBackground(new java.awt.Color(200, 0, 0));
-        botonEliminar.setFont(new java.awt.Font("Inter", 1, 16)); // NOI18N
-        botonEliminar.setForeground(new java.awt.Color(236, 230, 240));
-        botonEliminar.setText("Actualizar");
-        botonEliminar.addActionListener(this::botonEliminarActionPerformed);
+        botonActualizar.setBackground(new java.awt.Color(200, 0, 0));
+        botonActualizar.setFont(new java.awt.Font("Inter", 1, 16)); // NOI18N
+        botonActualizar.setForeground(new java.awt.Color(236, 230, 240));
+        botonActualizar.setText("Actualizar");
+        botonActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        mensajeError.setFont(new java.awt.Font("Inter", 0, 10)); // NOI18N
+        mensajeError.setForeground(new java.awt.Color(255, 0, 0));
+        mensajeError.setText("Introduzca un valor entero mayor o igual que 0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -112,45 +206,47 @@ public class PanelActualizacion extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(mensajeError1)
-                    .addComponent(textoProducto)
-                    .addComponent(textoDescripcion)
-                    .addComponent(textoActualizar)
-                    .addComponent(menuProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textoNombre)
                             .addComponent(campoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textoProveedor)
-                            .addComponent(campoProveedor)))
-                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textoProveedor)
+                        .addGap(271, 271, 271))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(mensajeCamposObligatorios)
+                            .addComponent(menuProductos, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(texto$)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(campoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addComponent(menuCategorias, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(botonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botonActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(texto$)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(mensajeCamposObligatorios)
+                                    .addComponent(textoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(botonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(botonActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textoCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(46, 46, 46))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(textoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(textoCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mensajeError)
+                            .addComponent(textoActualizar)
+                            .addComponent(textoDescripcion)
+                            .addComponent(textoProducto))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,9 +259,7 @@ public class PanelActualizacion extends javax.swing.JPanel
                 .addComponent(textoProducto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(menuProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mensajeError1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoNombre)
                     .addComponent(textoProveedor))
@@ -173,51 +267,256 @@ public class PanelActualizacion extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textoPrecio)
+                    .addComponent(textoCategoria))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(texto$)
+                    .addComponent(menuCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mensajeError)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 91, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textoPrecio)
-                            .addComponent(textoCategoria))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(texto$)
-                            .addComponent(menuCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-                        .addComponent(mensajeCamposObligatorios))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(botonActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(16, 16, 16))
+                            .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mensajeCamposObligatorios)
+                        .addGap(18, 18, 18))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNombreActionPerformed
+    private void menuProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuProductosActionPerformed
+        if(this.menuProductos.getSelectedIndex() != 0)
+        {
+            this.indice = this.menuProductos.getSelectedIndex() - 1;
+            this.producto = GestorInventario.getProductos().get(indice);
+            this.campoNombre.setText(producto.getNombre());
+            this.campoNombre.setForeground(new Color(0, 0, 0));
+            this.campoPrecio.setText(String.valueOf(producto.getPrecio()));
+            this.campoPrecio.setForeground(new Color(0, 0, 0));
+            this.campoProveedor.setText(producto.getProveedor());
+            this.campoProveedor.setForeground(new Color(0, 0, 0));
+            this.menuCategoria.setSelectedItem(producto.getCategoria());
+        }
+        this.validarSeleccion();
+    }//GEN-LAST:event_menuProductosActionPerformed
+
+    private void campoNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoNombreFocusGained
+        if(this.campoNombre.getText().equals("Ingrese el nombre"))
+        {
+            this.campoNombre.setText("");
+            this.campoNombre.setForeground(new Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_campoNombreFocusGained
+
+    private void campoNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoNombreFocusLost
+        if(this.campoNombre.getText().isEmpty())
+        {
+            this.campoNombre.setText("Ingrese el nombre");
+            this.campoNombre.setForeground(new Color(200, 200, 200));
+        }
+    }//GEN-LAST:event_campoNombreFocusLost
+
+    private void campoProveedorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoProveedorFocusGained
+        if(this.campoProveedor.getText().equals("Ingrese el proveedor"))
+        {
+            this.campoProveedor.setText("");
+            this.campoProveedor.setForeground(new Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_campoProveedorFocusGained
+
+    private void campoProveedorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoProveedorFocusLost
+        if(this.campoProveedor.getText().isEmpty())
+        {
+            this.campoProveedor.setText("Ingrese el proveedor");
+            this.campoProveedor.setForeground(new Color(200, 200, 200));
+        }
+    }//GEN-LAST:event_campoProveedorFocusLost
+
+    private void campoPrecioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoPrecioFocusGained
+        if(this.campoPrecio.getText().equals("Ingrese el precio"))
+        {
+            this.campoPrecio.setText("");
+            this.campoPrecio.setForeground(new Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_campoPrecioFocusGained
+
+    private void campoPrecioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoPrecioFocusLost
+        if(this.campoPrecio.getText().isEmpty())
+        {
+            this.campoPrecio.setText("Ingrese el precio");
+            this.campoPrecio.setForeground(new Color(200, 200, 200));
+        }
+    }//GEN-LAST:event_campoPrecioFocusLost
+
+    private void menuCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCategoriaActionPerformed
+        if(this.actualizando) 
+            return;
+        
+        if("Nuevo".equals(this.menuCategoria.getSelectedItem())) 
+        {
+            String nueva = JOptionPane.showInputDialog(this, "Nueva categoría:");
+
+            this.actualizando = true;
+            try 
+            {
+                if (nueva != null && !nueva.isBlank()) {
+                    nueva = nueva.trim();
+                    DefaultComboBoxModel<String> modelo = (DefaultComboBoxModel<String>) this.menuCategoria.getModel();
+                    if (modelo.getIndexOf(nueva) == -1)
+                        modelo.addElement(nueva);
+                    this.menuCategoria.setSelectedItem(nueva);
+                } 
+                else 
+                {
+                    this.menuCategoria.setSelectedIndex(0);
+                }
+            } 
+            finally 
+            {
+                this.actualizando = false;
+            }
+        }
+        this.validarSeleccion();
+    }//GEN-LAST:event_menuCategoriaActionPerformed
+
+    private void campoNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoNombreKeyReleased
+        this.validarSeleccion();
+    }//GEN-LAST:event_campoNombreKeyReleased
+
+    private void campoProveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoProveedorKeyReleased
+        this.validarSeleccion();
+    }//GEN-LAST:event_campoProveedorKeyReleased
+
+    private void campoPrecioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoPrecioKeyReleased
+        this.validarSeleccion();
+    }//GEN-LAST:event_campoPrecioKeyReleased
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campoNombreActionPerformed
-
-    private void botonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarActionPerformed
-        GestorInventario.actualizarProducto(this.indice, campoNombre.getText(), Float.parseFloat(campoPrecio.getText()), campoProveedor.getText(), String.valueOf(menuCategorias.getSelectedItem()));
-    }//GEN-LAST:event_botonCerrarActionPerformed
-
-    private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
-        GestorInventario.getProductos().remove(producto);
-    }//GEN-LAST:event_botonEliminarActionPerformed
-
+    }//GEN-LAST:event_formMousePressed
+    
+    public void validarSeleccion()
+    {
+        boolean precio = this.validarPrecio();
+        boolean nombre = !estaVacio(this.campoNombre, "Ingrese el nombre");
+        boolean proveedor = !estaVacio(this.campoProveedor, "Ingrese el proveedor");
+        boolean categoria = this.menuCategoria.getSelectedItem() != null && !this.menuCategoria.getSelectedItem().equals("Escoja la categoría");
+        boolean producto = this.menuProductos.getSelectedItem() != null && !this.menuProductos.getSelectedItem().equals("Elija el producto");
+        if(!producto)
+        {
+            this.botonActualizar.setEnabled(false);
+            this.botonEliminar.setEnabled(false);
+            this.textoCategoria.setEnabled(false);
+            this.textoNombre.setEnabled(false);
+            this.textoPrecio.setEnabled(false);
+            this.textoProveedor.setEnabled(false);
+            this.texto$.setEnabled(false);
+            this.campoNombre.setEnabled(false);
+            this.campoPrecio.setEnabled(false);
+            this.campoProveedor.setEnabled(false);
+            this.menuCategoria.setEnabled(false);
+            this.mensajeError.setVisible(false);
+        }
+        else
+        {
+            this.textoCategoria.setEnabled(true);
+            this.textoNombre.setEnabled(true);
+            this.textoPrecio.setEnabled(true);
+            this.textoProveedor.setEnabled(true);
+            this.texto$.setEnabled(true);
+            this.campoNombre.setEnabled(true);
+            this.campoPrecio.setEnabled(true);
+            this.campoProveedor.setEnabled(true);
+            this.menuCategoria.setEnabled(true);
+            this.botonActualizar.setEnabled(precio && nombre && proveedor && categoria);
+            this.botonEliminar.setEnabled(true);
+        }
+    }
+    
+    private boolean estaVacio(JTextField campo, String placeholder)
+    {
+        return campo.getText().isBlank() || campo.getText().equals(placeholder);
+    }
+    
+    private boolean validarPrecio()
+    {
+        if(estaVacio(this.campoPrecio, "Ingrese el precio"))
+        {
+            this.mensajeError.setVisible(false);
+            return false;
+        }
+        boolean valido;
+        try
+        {
+            valido = Float.parseFloat(this.campoPrecio.getText()) >= 0;
+        }
+        catch(NumberFormatException e)
+        {
+            valido = false;
+        }
+        this.mensajeError.setVisible(!valido);
+        return valido;
+    }
+    
+    public void cargarCategorias()
+    {
+        DefaultComboBoxModel<String> modelo = (DefaultComboBoxModel<String>) this.menuCategoria.getModel();
+        modelo.addAll(GestorInventario.getListaCategorias());
+    }
+    
+    public void cargarProductos()
+    {
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        modelo.addElement("Elija el producto");
+        for (Producto producto : GestorInventario.getProductos())
+            modelo.addElement(producto.getNombre());
+        this.menuProductos.setModel(modelo);
+        this.menuProductos.setSelectedIndex(0);
+    }
+    
+    public void guardarInfoProducto()
+    {
+        this.nombre = campoNombre.getText().trim();
+        this.precio = Float.parseFloat(campoPrecio.getText().trim());
+        this.proveedor = campoProveedor.getText().trim();
+        this.categoria = String.valueOf(menuCategoria.getSelectedItem());
+    }
+    
+    public void limpiar()
+    {
+        this.campoNombre.setText("Ingrese el nombre");
+        this.campoNombre.setForeground(new Color(200, 200, 200));
+        this.campoProveedor.setText("Ingrese el proveedor");
+        this.campoProveedor.setForeground(new Color(200, 200, 200));
+        this.campoPrecio.setText("Ingrese el precio");
+        this.campoPrecio.setForeground(new Color(200, 200, 200));
+        actualizando = true;
+        this.menuCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Escoja la categoría", "Nuevo" }));
+        this.menuCategoria.setSelectedIndex(0);
+        actualizando = false;
+        this.indice = -1;
+        this.producto = null;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonActualizar;
-    private javax.swing.JButton botonCerrar;
-    private javax.swing.JButton botonEliminar;
+    public javax.swing.JButton botonActualizar;
+    public javax.swing.JButton botonCerrar;
+    public javax.swing.JButton botonEliminar;
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoPrecio;
     private javax.swing.JTextField campoProveedor;
     private javax.swing.JLabel mensajeCamposObligatorios;
-    private javax.swing.JLabel mensajeError1;
-    private javax.swing.JComboBox<String> menuCategorias;
+    private javax.swing.JLabel mensajeError;
+    private javax.swing.JComboBox<String> menuCategoria;
     private javax.swing.JComboBox<String> menuProductos;
     private javax.swing.JLabel texto$;
     private javax.swing.JLabel textoActualizar;
@@ -228,6 +527,11 @@ public class PanelActualizacion extends javax.swing.JPanel
     private javax.swing.JLabel textoProducto;
     private javax.swing.JLabel textoProveedor;
     // End of variables declaration//GEN-END:variables
-    private int indice;
-    private Producto producto;
+    public int indice;
+    public Producto producto;
+    public String nombre;
+    public float precio;
+    public String proveedor;
+    public String categoria;
+    private boolean actualizando = false;
 }
